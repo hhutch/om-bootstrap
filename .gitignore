@@ -1,11 +1,8 @@
-out
-/out
 /target
 /classes
 /checkouts
 pom.xml
 pom.xml.asc
-*.js
 *.jar
 *.class
 /.lein-*
