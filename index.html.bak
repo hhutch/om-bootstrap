@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="css/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+      .centering {
+      float: none;
+      margin: 0 auto;
+      border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="entry" class="col-md-10 centering"></div>
+    <div id="tasks" class="col-md-10 centering"></div>
+    <script src="js/bower_components/react/react.min.js"></script>
+    <script src="js/bower_components/react-bootstrap/react-bootstrap.min.js"></script>
+    <script src="js/out/goog/base.js" type="text/javascript"></script>
+    <script src="js/om_bootstrap_demo.js" type="text/javascript"></script>
+    <script type="text/javascript">goog.require("om_bootstrap_demo.core");</script>
+  </body>
+</html>

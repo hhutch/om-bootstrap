@@ -5,27 +5,10 @@
 
 (enable-console-print!)
 
-(def ^:private meths
-  {:get "GET"
-   :put "PUT"
-   :post "POST"
-   :delete "DELETE"})
 
-(defn json-xhr [{:keys [method url data on-complete]}]
-  (let [xhr (gnet/xhr-connection.)]
-    (gevent/listen xhr :success
-                   (fn [e]
-                     (on-complete
-                      (.getResponseText xhr))))
-    (gnet/transmit xhr url (meths method) data)))
+(def app-state (atom {}))
 
-(def app-state
-  (atom
-   {:tasks
-    [{:name "get milk"}
-     {:name "grate cheese"}
-     {:name "wash dishes"}]}))
-(om/root
+#_(om/root
  (fn [app owner]
    (reify
      om/IRender
@@ -67,22 +50,27 @@
  app-state
  {:target (. js/document (getElementById "entry"))})
 
-(defn task-view [task owner]
-  (println "yolo: " (:name task))
+
+(defn nav-header [app owner]
   (reify
     om/IRender
     (render [this]
-      (dom/li #js {:className "well"}
-              (:name task)))))
+      (dom/div #js {:className "container"}
+               (omd/nav #js {:bsStyle "tabs"
+                             :className "collapse navbar-collapse bs-navbar-collapse"}
+                        (omd/nav-item nil "Om Bootstrap")
+                        (omd/nav-item nil "Getting started")
+                        (omd/nav-item nil "Components"))))))
 
-(defn task-list [app owner]
+(defn nav-main [app owner]
   (reify
     om/IRender
-    (render [this {:keys [editing]}]
-      (dom/div #js {:id "tasks"}
-               (dom/h2 nil "Tasks")
-               (apply dom/ul nil
-                      (om/build-all task-view (:tasks app)))))))
-
-(om/root task-list app-state
-         {:target (. js/document (getElementById "tasks"))})
+    (render [this]
+      (omd/navbar #js {:componentClass dom/header
+                       :staticTop ""
+                       :className "bs-docs-nav"
+                       :role "banner"}
+                  (dom/div #js {:className "container"}
+                           "foo")))))
+(om/root nav-main app-state
+         {:target (. js/document (getElementById "header"))})
