@@ -40,7 +40,9 @@
 
 (defn ^:private gen-react-dom-inline-fn [tag]
   `(defmacro ~(second tag) [opts# & children#]
-     `(~'~(symbol "js" (str "ReactBootstrap." (name (first tag)))) ~opts# ~@children#)))
+     `(~'~(symbol "js"
+                  (str "ReactBootstrap."
+                       (name (first tag)))) ~opts# ~@children#)))
 
 (defmacro ^:private gen-react-dom-inline-fns []
   `(do
@@ -50,7 +52,11 @@
 
 (defn ^:private gen-react-dom-fn [tag]
   `(defn ~(second tag) [opts# & children#]
-     (.apply ~(symbol "js" (str "ReactBootstrap." (name (first tag)))) nil (cljs.core/into-array (cons opts# children#)))))
+     (.apply ~(symbol "js"
+                      (str "ReactBootstrap."
+                           (name (first tag))))
+             nil
+             (cljs.core/into-array (cons opts# children#)))))
 
 (defmacro ^:private gen-react-dom-fns []
   `(do

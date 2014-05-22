@@ -1,4 +1,4 @@
-(defproject om-bootstrap "0.0.2"
+(defproject om-bootstrap "0.0.3"
   :description "Om wrapper for React-Bootstrap"
   :url "http://github.com/hhutch/om-bootstrap"
   :license {:name "Eclipse"
@@ -18,8 +18,5 @@
               :source-paths ["src" "test"]
               :compiler {
                 :preamble ["react/react.min.js"]
-                :output-to "script/tests.simple.js"
-                :output-dir "script/out"
-                :source-map "script/tests.simple.js.map"
                 :output-wrapper false
                 :optimizations :simple}}]})
