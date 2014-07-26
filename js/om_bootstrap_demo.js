@@ -3,4 +3,11 @@ goog.addDependency("../cljs/core.js", ['cljs.core'], ['goog.string', 'goog.objec
 goog.addDependency("../om_bootstrap/dom.js", ['om_bootstrap.dom'], ['cljs.core']);
 goog.addDependency("../om/dom.js", ['om.dom'], ['cljs.core']);
 goog.addDependency("../om/core.js", ['om.core'], ['cljs.core', 'om.dom', 'goog.ui.IdGenerator']);
-goog.addDependency("../om_bootstrap_demo/core.js", ['om_bootstrap_demo.core'], ['om_bootstrap.dom', 'cljs.core', 'om.dom', 'om.core']);
+goog.addDependency("../clojure/string.js", ['clojure.string'], ['goog.string', 'cljs.core', 'goog.string.StringBuffer']);
+goog.addDependency("../dommy/attrs.js", ['dommy.attrs'], ['cljs.core', 'clojure.string']);
+goog.addDependency("../dommy/template.js", ['dommy.template'], ['cljs.core', 'dommy.attrs', 'clojure.string']);
+goog.addDependency("../dommy/utils.js", ['dommy.utils'], ['cljs.core']);
+goog.addDependency("../dommy/core.js", ['dommy.core'], ['dommy.template', 'cljs.core', 'dommy.attrs', 'dommy.utils', 'clojure.string']);
+goog.addDependency("../clojure/walk.js", ['clojure.walk'], ['cljs.core']);
+goog.addDependency("../secretary/core.js", ['secretary.core'], ['cljs.core', 'clojure.string', 'clojure.walk']);
+goog.addDependency("../om_bootstrap_demo/core.js", ['om_bootstrap_demo.core'], ['om_bootstrap.dom', 'cljs.core', 'om.dom', 'goog.history.EventType', 'goog.History', 'om.core', 'dommy.core', 'secretary.core', 'dommy.utils', 'goog.events']);

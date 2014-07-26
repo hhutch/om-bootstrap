@@ -1,66 +1,22 @@
 (ns om-bootstrap-demo.core
+  (:require-macros [dommy.macros :refer [node sel sel1]])
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
-            [om-bootstrap.dom :as omd]))
+            [om-bootstrap.dom :as omd]
+            [secretary.core :as secretary :include-macros true :refer [defroute]]
+            [dommy.utils :as utils]
+            [dommy.core :as dommy]
+            [goog.events :as events]
+            [goog.history.EventType :as EventType]
+            )
+  (:import goog.History)
+  )
+
 
 (enable-console-print!)
-
+(secretary/set-config! :prefix "#")
 
 (def app-state (atom {}))
-
-#_(om/root
- (fn [app owner]
-   (reify
-     om/IRender
-     (render [this]
-       (dom/div #js {:className "row-fluid"}
-                (dom/form #js {:className "form well"}
-                          (dom/div
-                           #js {:className "row-fluid"}
-                           (dom/input
-                            #js {:className "input-block-level" :id "in-it"})
-                           (omd/button-group
-                            nil
-                            (omd/button
-                             #js {:bsStyle "primary"
-                                  :bsSize "small"
-                                  :onClick #(json-xhr
-                                             {:method :post
-                                              :url (str "http://localhost:3000/tasks")
-                                              :data (str "name="
-                                                         (.-value
-                                                          (. js/document
-                                                             (getElementById "in-it"))))
-                                              :on-complete (fn [res]
-                                                             (println "response: " res))})}
-                             "submit")
-                            (omd/button
-                             #js {:bsStyle "danger"
-                                  :bsSize "small"
-                                  :onClick #(json-xhr
-                                             {:method :post
-                                              :url (str "http://localhost:3000/tasks")
-                                              :data (str "name="
-                                                         (.-value
-                                                          (. js/document
-                                                             (getElementById "in-it"))))
-                                              :on-complete (fn [res]
-                                                             (println "response: " res))})}
-                             "cancel"))))))))
- app-state
- {:target (. js/document (getElementById "entry"))})
-
-
-(defn nav-header [app owner]
-  (reify
-    om/IRender
-    (render [this]
-      (dom/div #js {:className "container"}
-               (omd/nav #js {:bsStyle "tabs"
-                             :className "collapse navbar-collapse bs-navbar-collapse"}
-                        (omd/nav-item nil "Om Bootstrap")
-                        (omd/nav-item nil "Getting started")
-                        (omd/nav-item nil "Components"))))))
 
 (defn nav-main [app owner]
   (reify
@@ -76,8 +32,76 @@
                                 :role "navigation"
                                 :key 0
                                 :id "top"}
-                           (dom/li #js {:key "getting-started"} (dom/a #js {:href "/gettings-started"} "Getting Started"))
-                           (dom/li #js {:key "components"} (dom/a #js {:href "/components"} "Components")))))))
+                           (dom/li #js {:key "getting-started"
+                                        :className (if (= "getting-started"
+                                                          (:highlight @app-state))
+                                                     "active")}
+                                   (dom/a
+                                    #js {:href "/gettings-started"}
+                                    "Getting Started"))
+                           (dom/li #js {:key "components"
+                                        :className (if (= "components"
+                                                          (:highlight @app-state))
+                                                     "active")}
+                                   (dom/a #js {:href "/components"} "Components")))))))
 
-(om/root nav-main app-state
-         {:target (. js/document (getElementById "header"))})
+(defn draw-menu-bar [highlight]
+  (if (string? highlight)
+          (swap! app-state assoc :highlight highlight))
+  (om/root nav-main app-state
+           {:target (sel1 :#header)}))
+
+(defroute root "/" []
+  (draw-menu-bar nil)
+  (om/root
+   (fn [app owner]
+     (reify
+       om/IRender
+       (render [_]
+         (dom/main #js {:className "bs-docs-masthead"
+                        :id "content"
+                        :role "main"}
+                   (dom/div #js {:className "container"}
+                            (dom/span #js {:className "bs-docs-booticon bs-docs-booticon-lg bs-docs-booticon-outline"})
+                            (dom/p #js {:className "lead"}
+                                   "The most popular front-end framework, rebuilt for OM"))))))
+   app-state
+   {:target (sel1 :#main)}))
+
+(defroute getting-started "/getting-started" []
+  (println "why why?")
+  (draw-menu-bar "getting-started")
+  (om/root
+   (fn [app owner]
+     (reify
+       om/IRender
+       (render [_]
+         (dom/div nil "notwhere to start"))))
+   app-state
+   {:target (sel1 :#main)}))
+
+(defroute components "/components" []
+  (println "wanker")
+  (draw-menu-bar "components")
+  (om/root
+   (fn [app owner]
+     (reify
+       om/IRender
+       (render [_]
+         (dom/div nil "golfwang"))))
+   app-state
+   {:target (sel1 :#main)}))
+
+(println "problems?")
+
+;; Quick and dirty history configuration.
+;; #_(let [h (History.)]
+;;    (goog.events/listen h EventType/NAVIGATE #(secretary/dispatch! (.-token %)))
+;;    (doto h (.setEnabled true))
+;;   )
+;; (doto (History.)
+;;   (goog.events/listen
+;;    EventType/Navigate
+;;    #(secretary/dispatch! (.-token %)))
+;;   (.setEnabled true))
+(secretary/dispatch! "/")

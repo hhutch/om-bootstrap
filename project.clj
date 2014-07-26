@@ -5,7 +5,9 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2277"]
                  [om "0.6.5"]
-                 [om-bootstrap "0.0.4"]]
+                 [om-bootstrap "0.0.4"]
+                 [secretary "1.1.0"]
+                 [prismatic/dommy "0.1.2"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]
             [lein-simpleton "1.2.0"]]
