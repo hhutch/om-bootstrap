@@ -1,6 +1,6 @@
 define(
-  ["./react-es6","./react-es6/lib/cx","./BootstrapMixin","./FadeMixin","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __exports__) {
+  ["./react-es6","./react-es6/lib/cx","./BootstrapMixin","./FadeMixin","./react-es6/lib/EventListener","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __exports__) {
     "use strict";
     /** @jsx React.DOM */
 
@@ -8,6 +8,7 @@ define(
     var classSet = __dependency2__["default"];
     var BootstrapMixin = __dependency3__["default"];
     var FadeMixin = __dependency4__["default"];
+    var EventListener = __dependency5__["default"];
 
 
     // TODO:
@@ -22,6 +23,8 @@ define(
         title: React.PropTypes.renderable,
         backdrop: React.PropTypes.oneOf(['static', true, false]),
         keyboard: React.PropTypes.bool,
+        closeButton: React.PropTypes.bool,
+        animation: React.PropTypes.bool,
         onRequestHide: React.PropTypes.func.isRequired
       },
 
@@ -30,26 +33,33 @@ define(
           bsClass: 'modal',
           backdrop: true,
           keyboard: true,
-          animation: true
+          animation: true,
+          closeButton: true
         };
       },
 
       render: function () {
         var modalStyle = {display: 'block'};
-        var classes = this.getBsClassSet();
+        var dialogClasses = this.getBsClassSet();
+        delete dialogClasses.modal;
+        dialogClasses['modal-dialog'] = true;
 
-        classes['fade'] = this.props.animation;
-        classes['in'] = !this.props.animation || !document.querySelectorAll;
+        var classes = {
+          modal: true,
+          fade: this.props.animation,
+          'in': !this.props.animation || !document.querySelectorAll
+        };
 
         var modal = this.transferPropsTo(
           React.DOM.div(
-            {tabIndex:"-1",
+            {title:null,
+            tabIndex:"-1",
             role:"dialog",
             style:modalStyle,
             className:classSet(classes),
             onClick:this.props.backdrop === true ? this.handleBackdropClick : null,
             ref:"modal"}, 
-            React.DOM.div( {className:"modal-dialog"}, 
+            React.DOM.div( {className:classSet(dialogClasses)}, 
               React.DOM.div( {className:"modal-content"}, 
                 this.props.title ? this.renderHeader() : null,
                 this.props.children
@@ -70,18 +80,28 @@ define(
 
         classes['in'] = !this.props.animation || !document.querySelectorAll;
 
+        var onClick = this.props.backdrop === true ?
+          this.handleBackdropClick : null;
+
         return (
           React.DOM.div(null, 
-            React.DOM.div( {className:classSet(classes), ref:"backdrop"} ),
+            React.DOM.div( {className:classSet(classes), ref:"backdrop", onClick:onClick} ),
             modal
           )
         );
       },
 
       renderHeader: function () {
+        var closeButton;
+        if (this.props.closeButton) {
+          closeButton = (
+              React.DOM.button( {type:"button", className:"close", 'aria-hidden':"true", onClick:this.props.onRequestHide}, "×")
+            );
+        }
+
         return (
           React.DOM.div( {className:"modal-header"}, 
-            React.DOM.button( {type:"button", className:"close", 'aria-hidden':"true", onClick:this.props.onRequestHide}, "×"),
+            closeButton,
             this.renderTitle()
           )
         );
@@ -95,11 +115,12 @@ define(
       },
 
       componentDidMount: function () {
-        document.addEventListener('keyup', this.handleDocumentKeyUp);
+        this._onDocumentKeyupListener =
+          EventListener.listen(document, 'keyup', this.handleDocumentKeyUp);
       },
 
       componentWillUnmount: function () {
-        document.removeEventListener('keyup', this.handleDocumentKeyUp);
+        this._onDocumentKeyupListener.remove();
       },
 
       handleBackdropClick: function (e) {

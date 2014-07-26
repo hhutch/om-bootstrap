@@ -11,15 +11,17 @@ define(
 
       getDefaultProps: function () {
         return {
-          container: document.body
+          container: typeof document !== 'undefined' ? document.body : null
         };
       },
 
       componentWillUnmount: function () {
         this._unrenderOverlay();
-        this.getContainerDOMNode()
-          .removeChild(this._overlayTarget);
-        this._overlayTarget = null;
+        if (this._overlayTarget) {
+          this.getContainerDOMNode()
+            .removeChild(this._overlayTarget);
+          this._overlayTarget = null;
+        }
       },
 
       componentDidUpdate: function () {

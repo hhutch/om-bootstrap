@@ -1,6 +1,6 @@
 define(
-  ["./react-es6","./react-es6/lib/cx","./BootstrapMixin","./utils","exports"],
-  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __exports__) {
+  ["./react-es6","./react-es6/lib/cx","./BootstrapMixin","./utils","./ValidComponentChildren","exports"],
+  function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __exports__) {
     "use strict";
     /** @jsx React.DOM */
 
@@ -8,6 +8,7 @@ define(
     var classSet = __dependency2__["default"];
     var BootstrapMixin = __dependency3__["default"];
     var utils = __dependency4__["default"];
+    var ValidComponentChildren = __dependency5__["default"];
 
 
     var SubNav = React.createClass({displayName: 'SubNav',
@@ -19,7 +20,7 @@ define(
         disabled: React.PropTypes.bool,
         href: React.PropTypes.string,
         title: React.PropTypes.string,
-        text: React.PropTypes.renderable,
+        text: React.PropTypes.renderable
       },
 
       getDefaultProps: function () {
@@ -43,8 +44,6 @@ define(
       },
 
       isChildActive: function (child) {
-        var isActive = false;
-
         if (child.props.active) {
           return true;
         }
@@ -58,7 +57,9 @@ define(
         }
 
         if (child.props.children) {
-          React.Children.forEach(
+          var isActive = false;
+
+          ValidComponentChildren.forEach(
             child.props.children,
             function (child) {
               if (this.isChildActive(child)) {
@@ -108,7 +109,7 @@ define(
               this.props.text
             ),
             React.DOM.ul( {className:"nav"}, 
-              utils.modifyChildren(this.props.children, this.renderNavItem)
+              ValidComponentChildren.map(this.props.children, this.renderNavItem)
             )
           )
         );
@@ -119,7 +120,7 @@ define(
           child,
           {
             active: this.getChildActiveProp(child),
-            onSelect: utils.createChainedFunction(child.onSelect, this.props.onSelect),
+            onSelect: utils.createChainedFunction(child.props.onSelect, this.props.onSelect),
             ref: child.props.ref,
             key: child.props.key
           }

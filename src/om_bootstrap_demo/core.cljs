@@ -67,10 +67,17 @@
     om/IRender
     (render [this]
       (omd/navbar #js {:componentClass dom/header
-                       :staticTop ""
+                       :brand (dom/a #js {:href "/" :className "navbar-brand"} "OM Bootstrap")
+                       :staticTop true
                        :className "bs-docs-nav"
-                       :role "banner"}
-                  (dom/div #js {:className "container"}
-                           "foo")))))
+                       :role "banner"
+                       :toggleNavKey 0}
+                  (omd/nav #js {:className "bs-navbar-collapse"
+                                :role "navigation"
+                                :key 0
+                                :id "top"}
+                           (dom/li #js {:key "getting-started"} (dom/a #js {:href "/gettings-started"} "Getting Started"))
+                           (dom/li #js {:key "components"} (dom/a #js {:href "/components"} "Components")))))))
+
 (om/root nav-main app-state
          {:target (. js/document (getElementById "header"))})
