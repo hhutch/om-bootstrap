@@ -7,7 +7,8 @@
                  [om "0.6.5"]
                  [om-bootstrap "0.0.4"]
                  [secretary "1.1.0"]
-                 [prismatic/dommy "0.1.2"]]
+                 [prismatic/dommy "0.1.2"]
+                 [garden "1.2.1"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]
             [lein-simpleton "1.2.0"]]
