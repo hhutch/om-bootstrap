@@ -8,11 +8,11 @@
 
   :source-paths  ["src"]
 
-  :dependencies [[org.clojure/clojure "1.5.1"]
-                 [org.clojure/clojurescript "0.0-2173" :scope "provided"]
-                 [com.facebook/react "0.9.0.1"]]
+  :dependencies [[org.clojure/clojure "1.6.0"]
+                 [org.clojure/clojurescript "0.0-2816" :scope "provided"]
+                 [cljsjs/react "0.12.2-5"]]
 
-  :plugins [[lein-cljsbuild "1.0.2"]]
+  :plugins [[lein-cljsbuild "1.0.4"]]
   :cljsbuild {
     :builds [{:id "test"
               :source-paths ["src" "test"]
