@@ -1,4 +1,4 @@
-(defproject om-bootstrap "0.0.3"
+(defproject org.hhutch/om-bootstrap "0.0.5"
   :description "Om wrapper for React-Bootstrap"
   :url "http://github.com/hhutch/om-bootstrap"
   :license {:name "Eclipse"
